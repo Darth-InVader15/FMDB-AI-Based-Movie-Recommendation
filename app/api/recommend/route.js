@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
+import { prisma } from '@/lib/prisma';
 
 export async function POST(request) {
   try {
@@ -96,6 +97,19 @@ Each object must have the following exact schema:
       );
       recommendations = enrichedRecommendations;
     }
+
+    // SAVE TO DATABASE
+    await prisma.$transaction(async (tx) => {
+      await tx.recommendation.deleteMany();
+      await tx.recommendation.createMany({
+        data: recommendations.map(rec => ({
+          title: rec.title,
+          poster_path: rec.poster_path || null,
+          year: rec.year || null,
+          reason: rec.reason,
+        }))
+      });
+    });
 
     return NextResponse.json({ recommendations });
   } catch (error) {

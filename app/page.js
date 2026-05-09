@@ -14,28 +14,43 @@ const DEFAULT_ITEMS = {
 
 export default function Home() {
   const [items, setItems] = useState(DEFAULT_ITEMS);
+  const [isLoading, setIsLoading] = useState(true);
   const isFirstRender = React.useRef(true);
 
-  // Load from local storage
+  // Load from DB
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem('movie_recommender_state');
-      if (saved) {
-        setItems(JSON.parse(saved));
+    async function loadBoard() {
+      try {
+        const res = await fetch('/api/db/board');
+        if (res.ok) {
+          const data = await res.json();
+          // Merge fetched items with default structure to ensure all keys exist
+          setItems({ ...DEFAULT_ITEMS, ...data.items });
+        }
+      } catch (e) {
+        console.error('Failed to load board state from DB', e);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (e) {
-      console.error('Failed to parse local storage', e);
     }
+    loadBoard();
   }, []);
 
-  // Save to local storage
+  // Save to DB on change
   useEffect(() => {
-    if (isFirstRender.current) {
+    if (isFirstRender.current || isLoading) {
       isFirstRender.current = false;
       return;
     }
-    localStorage.setItem('movie_recommender_state', JSON.stringify(items));
-  }, [items]);
+    
+    // Background save to DB
+    fetch('/api/db/board', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items }),
+    }).catch(e => console.error('Failed to sync board', e));
+
+  }, [items, isLoading]);
 
   const handleAddMovie = (movie) => {
     const exists = Object.values(items).some(list => 
@@ -49,6 +64,10 @@ export default function Home() {
       ok: [movie, ...prev.ok] // Add to 'ok' as a neutral starting point
     }));
   };
+
+  if (isLoading) {
+    return <div className="min-h-screen bg-black flex items-center justify-center text-white">Loading your board...</div>;
+  }
 
   return (
     <main className="h-screen w-full overflow-y-auto overflow-x-hidden snap-y snap-mandatory bg-black text-white no-scrollbar">

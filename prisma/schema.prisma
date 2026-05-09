@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model CategoryList {
+  id        String   @id @default(cuid())
+  name      String   @unique // 'loved', 'liked', 'ok', 'not_for_me'
+  movies    Movie[]
+}
+
+model Movie {
+  id             String       @id
+  title          String
+  poster_path    String?
+  year           String?
+  
+  categoryName   String
+  category       CategoryList @relation(fields: [categoryName], references: [name], onDelete: Cascade)
+
+  // To preserve ordering within the list
+  position       Int          @default(0)
+
+  @@index([categoryName, position])
+}
+
+model Recommendation {
+  id          String   @id @default(cuid())
+  title       String
+  poster_path String?
+  year        String?
+  reason      String
+  
+  createdAt   DateTime @default(now())
+}

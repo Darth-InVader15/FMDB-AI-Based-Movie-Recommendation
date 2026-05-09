@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sparkles, Loader2, ChevronRight, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -11,6 +11,24 @@ export default function RecommendationSection({ items }) {
   const [activeCardId, setActiveCardId] = useState(null);
 
   const carouselRef = React.useRef(null);
+
+  // Load saved recommendations on mount
+  useEffect(() => {
+    async function loadSavedRecs() {
+      try {
+        const res = await fetch('/api/db/recommendations');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.recommendations && data.recommendations.length > 0) {
+            setRecommendations(data.recommendations);
+          }
+        }
+      } catch (e) {
+        console.error('Failed to load saved recommendations', e);
+      }
+    }
+    loadSavedRecs();
+  }, []);
 
   const handleGetRecommendations = async () => {
     const hasMovies = Object.values(items).some(list => list.length > 0);

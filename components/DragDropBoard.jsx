@@ -157,14 +157,15 @@ export default function DragDropBoard({ items, setItems }) {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full h-[60vh] min-h-[400px]">
+      <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 w-full h-full">
         {COLUMNS.map((col) => (
-          <CategoryColumn 
-            key={col.id}
-            id={col.id}
-            title={col.title}
-            movies={items[col.id] || []}
-          />
+          <div key={col.id} className="flex-1 min-w-0 min-h-0 h-full">
+            <CategoryColumn 
+              id={col.id}
+              title={col.title}
+              movies={items[col.id] || []}
+            />
+          </div>
         ))}
       </div>
 

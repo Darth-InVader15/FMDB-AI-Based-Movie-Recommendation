@@ -3,9 +3,8 @@
 import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical } from 'lucide-react';
 
-export default function MovieCard({ id, title, poster_path, year }) {
+export default function MovieCard({ id, title, poster_path }) {
   const {
     attributes,
     listeners,
@@ -19,7 +18,6 @@ export default function MovieCard({ id, title, poster_path, year }) {
     transform: CSS.Transform.toString(transform),
     transition,
     zIndex: isDragging ? 100 : 1,
-    opacity: isDragging ? 0.8 : 1,
   };
 
   const imageUrl = poster_path 
@@ -30,33 +28,20 @@ export default function MovieCard({ id, title, poster_path, year }) {
     <div
       ref={setNodeRef}
       style={style}
-      className={`glass-panel p-2 mb-3 flex gap-3 items-center group relative ${isDragging ? 'shadow-lg ring-1 ring-white/20' : ''}`}
+      className={`relative group cursor-grab active:cursor-grabbing shrink-0 w-[28%] aspect-[2/3] transition-all duration-200 hover:-translate-y-2 hover:scale-105 ${isDragging ? 'opacity-70 scale-105 z-50 shadow-2xl ring-2 ring-white/50' : 'shadow-lg'}`}
       {...attributes}
       {...listeners}
+      title={title}
     >
-      {/* Drag Handle */}
-      <div className="cursor-grab active:cursor-grabbing text-gray-500 hover:text-white transition-colors p-1 -ml-1">
-        <GripVertical size={16} />
-      </div>
-
-      {/* Poster */}
       <img 
         src={imageUrl} 
         alt={title} 
-        className="w-12 h-18 object-cover rounded-sm flex-shrink-0 bg-[#222]"
-        loading="lazy"
+        className="w-full h-full object-cover rounded-md bg-[#222] border border-[#333]"
+        draggable={false}
       />
-
-      {/* Info */}
-      <div className="flex-1 min-w-0 pr-2">
-        <h4 className="font-semibold text-sm text-white truncate" title={title}>
-          {title}
-        </h4>
-        {year && (
-          <p className="text-xs text-gray-400 mt-0.5">
-            {year}
-          </p>
-        )}
+      {/* Tooltip on hover */}
+      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-black/90 text-white text-[10px] rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 transition-opacity">
+        {title}
       </div>
     </div>
   );

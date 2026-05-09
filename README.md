@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next Watch (FMDB AI-Based Movie Recommendation)
 
-## Getting Started
+Next Watch is a dynamic, full-stack personal movie categorization and AI recommendation engine built with **Next.js**, **Tailwind CSS v4**, and **Framer Motion**. It allows users to search for movies/series, drag them into tailored categories, and receive highly personalized viewing recommendations powered by **Google Gemini AI**.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Intuitive Categorization**: A clean, 4-column drag-and-drop board (Loved, Liked, Ok, Not for me) utilizing `@dnd-kit`.
+- **Smart Search Integration**: Live search powered by the **TMDB API**, featuring debounced inputs (triggering at 3+ characters) and restricted suggestion results to keep the UI clean.
+- **AI Recommendation Engine**: Generates 10 customized movie/TV show suggestions based on your specific categorizations using the **Google GenAI SDK (Gemini 2.5 Flash)**.
+- **Modern UX/UI**: Fully redesigned with a deep black, Apple/Notion-inspired aesthetic.
+  - Features full-page CSS scroll-snapping.
+  - Utilizes horizontal carousels for rendering the AI recommendations.
+  - Integrated `framer-motion` for smooth layout expansions and animations.
+- **Local Persistence**: Automatically saves your board state directly into your browser's `localStorage` to preserve sessions.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠 Tech Stack
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- **Framework**: [Next.js 16 (App Router)](https://nextjs.org/)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Drag & Drop**: [dnd-kit](https://dndkit.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **APIs**: 
+  - [TMDB API](https://developer.themoviedb.org/docs) (Movie fetching and poster images)
+  - [Google Gemini API](https://ai.google.dev/) (Recommendation Engine)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📦 Getting Started
 
-## Learn More
+### Prerequisites
 
-To learn more about Next.js, take a look at the following resources:
+You will need valid API keys from TMDB and Google Gemini to run this project locally.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Installation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Darth-InVader15/FMDB-AI-Based-Movie-Recommendation.git
+   cd FMDB-AI-Based-Movie-Recommendation
+   ```
 
-## Deploy on Vercel
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. Set up your environment variables by creating a `.env.local` file in the root directory:
+   ```env
+   TMDB_API_KEY=your_tmdb_api_key_here
+   GEMINI_API_KEY=your_gemini_api_key_here
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+> **Note**: If you run into an infinite reload loop on `localhost`, please ensure you have disabled any problematic Chrome Extensions (such as dark mode enforcers or dev tools) that might be stuck in a `setInterval` loop trying to access `chrome.storage.get`. Alternatively, use an Incognito window.
+
+## 📝 Usage
+
+1. Search for a movie or TV show using the floating search bar.
+2. The searched item is added directly to your board. Drag it to the appropriate column (`Loved`, `Liked`, `Ok`, or `Not for me`).
+3. Scroll down to snap to the AI Recommendation Engine.
+4. Click **What to watch next** and wait for Gemini to calculate your perfect watch list!
+5. Scroll horizontally through the carousel and click on a movie to read exactly why the AI thinks you will enjoy it.
+
+---
+*Built as a smart alternative to traditional IMDB watchlists.*
